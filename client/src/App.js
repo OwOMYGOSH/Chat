@@ -11,42 +11,52 @@ function App() {
   // When the user is added
   const getUsername = (fetched_userName) => {
     setUserName(fetched_userName);
-    console.log("App:" + fetched_userName);
     socket.auth = { fetched_userName };
     socket.connect();
   };
 
+  // 更新 user.self 狀態
   socket.on("users", (users) => {
     console.log(users);
     users.forEach((user) => {
+      // 透過該網頁的 socket.id 與 userID 判斷是否為本人
       user.self = user.userID === socket.id;
     });
 
-    // put the current user first, and then sort by username
-    users = users.sort((a, b) => {
-      if (a.self) return -1;
-      if (b.self) return 1;
-      if (a.username < b.username) return -1;
-      return a.username > b.username ? 1 : 0;
-    });
     addUsers(users);
+    //// put the current user first, and then sort by username
+    // users = users.sort((a, b) => {
+    //   if (a.self) return -1;
+    //   if (b.self) return 1;
+    //   if (a.username < b.username) return -1;
+    //   return a.username > b.username ? 1 : 0;
+    // });
   });
 
-  socket.on("user connected", (user) => {
+  socket.on("user connect", (user) => {
     addUsers([...usersList, user]);
   });
 
-//   socket.on("user disconnected", (name) => {
-//     console.log("App: ", name);
-//     for (let i = 0; i < usersList.length; i++) {
-//         console.log("in user disconnected: " + i);
-//       if (usersList[i].username === name) {
-//         usersList.splice(i, 1);
+//   socket.on("disconnect", () => {
+//     usersList.forEach((user) => {
+//       if (user.self) {
+//         user.connected = false;
 //       }
-//     }
+//     });
 //     addUsers(usersList);
-//     console.log("App: ", usersList);
 //   });
+
+  //   socket.on("user disconnected", (name) => {
+  //     console.log("App: ", name);
+  //     for (let i = 0; i < usersList.length; i++) {
+  //         console.log("in user disconnected: " + i);
+  //       if (usersList[i].username === name) {
+  //         usersList.splice(i, 1);
+  //       }
+  //     }
+  //     addUsers(usersList);
+  //     console.log("App: ", usersList);
+  //   });
 
   return (
     <BrowserRouter>

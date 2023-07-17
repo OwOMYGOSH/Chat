@@ -68,17 +68,17 @@
 .chat__users {
     margin-bottom: 10px;
     color: #607eaa;
-    font-size: 14px;
+    font-size: 18px;
     transition: ease .5s;
     text-align: left;
-}
-
-.chat__users:hover {
-    color: #08439c;
-    font-size: 15px;
     cursor: pointer;
 }
 
+.chat__users__status {
+    color: black;
+    font-size: 12px;
+    cursor: default;
+}
 .online__users>* {
     margin-bottom: 10px;
     color: rgb(238, 102, 102);

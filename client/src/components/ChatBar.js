@@ -20,13 +20,18 @@ const ChatBar = (props) => {
   let showUsers = userList.map((user) => {
     if (!user.self) {
       return (
-        <div
-          key={user.key}
-          className="chat__users"
-          onClick={(e) => userName_from_click(e)}
-        >
-          {user.username}
-        </div>
+        <>
+          <div
+            key={user.key}
+            className="chat__users"
+            onClick={(e) => userName_from_click(e)}
+          >
+            {user.username}
+          </div>
+          {/* <p className="chat__users__status">
+            {user.connected ? "online" : "offline"}
+          </p> */}
+        </>
       );
     }
   });

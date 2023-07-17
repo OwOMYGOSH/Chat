@@ -33,6 +33,7 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   const users = [];
 
+  // 每有一個人連進來(新增一個socket)，就會更新 users 
   for (let [id, socket] of io.of("/").sockets) {
     users.push({
       userID: id,
@@ -41,14 +42,15 @@ io.on("connection", (socket) => {
     });
   }
 
-  socket.emit("users", users);
-
-  socket.broadcast.emit("user connected", {
+  socket.broadcast.emit("user connect", {
     userID: socket.id,
     username: socket.username,
     key: socket.id,
     self: false,
+    // connected: false,
   });
+
+  socket.emit("users", users);
 
   socket.on("private message", ({ content, to }) => {
     socket.to(to).emit("private message", {
@@ -67,22 +69,8 @@ io.on("connection", (socket) => {
         console.log("Message send to db");
       });
   });
+
   
-  socket.on("disconnect", () => {
-    console.log(users);
-    console.log("disconnect: " + socket.username);
-    //socket.broadcast.emit("user disconnected", socket.username)
-    for (let i = 0; i < users.length; i++) {
-      console.log("userID: " + users[i].userID);
-      console.log("socket id: " + socket.id);
-      if (users[i].userID === socket.id) {
-        console.log("before: ", users);
-        users.splice(i, 1);
-        break;
-      }
-    }
-    console.log("after: " + users);
-  });
 });
 
 http.listen(PORT, () => {

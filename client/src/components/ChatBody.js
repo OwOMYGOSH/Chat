@@ -25,7 +25,7 @@ const ChatBody = (props) => {
       return (
         <>
           
-          <div className="message__sender">
+          <div className="message__sender" ref={props.lastMessageRef}>
             <p>{message.time}</p>
             <p>{message.content}</p>
           </div>
@@ -38,7 +38,7 @@ const ChatBody = (props) => {
       return (
         <>
           
-          <div className="message__recipient">
+          <div className="message__recipient" ref={props.lastMessageRef}>
             <p>{message.time}</p>
             <p>{message.content}</p>
           </div>
