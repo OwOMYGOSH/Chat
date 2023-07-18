@@ -5,17 +5,25 @@ import { useNavigate } from "react-router-dom";
 const ChatBody = (props) => {
   const navigate = useNavigate();
 
-//   let selectedUser = {
-//     ...props.selectedUser,
-//     messages: [],
-//   };
-
   const handleLeaveChat = () => {
     console.log(socket.username);
     socket.disconnect();
     navigate("/");
     window.location.reload();
   };
+
+  // receive private message from server
+  socket.on("private message", ({ content, time, from }) => {
+
+    let newMessages = {
+      fromUser: from,
+      content,
+      time,
+      fromSelf: false,
+    };
+
+    props.setMessages([...props.messages, newMessages]);
+  });
 
   const showMessages = props.messages.map((message) => {
     if (
@@ -24,7 +32,6 @@ const ChatBody = (props) => {
     )
       return (
         <>
-          
           <div className="message__sender" ref={props.lastMessageRef}>
             <p>{message.time}</p>
             <p>{message.content}</p>
@@ -37,31 +44,12 @@ const ChatBody = (props) => {
     )
       return (
         <>
-          
           <div className="message__recipient" ref={props.lastMessageRef}>
             <p>{message.time}</p>
             <p>{message.content}</p>
           </div>
         </>
       );
-  });
-
-  // receive private message from server
-  socket.on("private message", ({ content, time, from }) => {
-    let newMessages = {};
-    for (let i = 0; i < props.connectedUsers.length; i++) {
-      const user = props.connectedUsers[i];
-      if (user.userID === from) {
-        newMessages = {
-          fromUser: props.connectedUsers[i].username,
-          content,
-          time,
-          fromSelf: false,
-        };
-        const messagesList = [...props.messages, newMessages];
-        props.setMessages(messagesList);
-      }
-    }
   });
 
   return (
@@ -74,9 +62,7 @@ const ChatBody = (props) => {
       </header>
 
       <div className="message__container">
-        <div className="message__chats">
-            {showMessages}
-        </div>
+        <div className="message__chats">{showMessages}</div>
       </div>
     </>
   );

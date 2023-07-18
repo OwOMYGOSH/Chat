@@ -8,17 +8,15 @@ const ChatPage = (props) => {
   const [userSelected, setUserSelected] = useState(false); // So that any chat window is not rendered when app is loaded
   const [messages, setMessages] = useState([]);
   const lastMessageRef = useRef(null);
-  // console.log("in ChatPage", props.connectedUsers);
 
   const getSelectedUser = (user) => {
     setSelectedUser(user);
+    // 有人被選取才會有聊天室跑出來
     setUserSelected(true);
-    console.log("In ChatPage, selected user:", user);
   };
 
-
+  // 👇️ scroll to bottom every time messages change
   useEffect(() => {
-    // 👇️ scroll to bottom every time messages change
     lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 

@@ -3,13 +3,9 @@ import socket from "../socket";
 
 const moment = require("moment");
 const ChatFooter = (props) => {
-//   let selectedUser = {
-//     ...props.selectedUser,
-//     messages: [],
-//   };
-
   let messageContent = "";
   let ref; //Reference to the input field so that it gets cleared every time we submit
+
   const getContent = (e) => {
     messageContent = e.target.value;
     ref = e;
@@ -17,19 +13,24 @@ const ChatFooter = (props) => {
 
   const onMessage = (e, content) => {
     e.preventDefault();
-    console.log("Message is:", content);
     ref.target.value = "";
     if (props.selectedUser) {
+      // 訊息透過 Server 傳給對象
       socket.emit("private message", {
         content,
         to: props.selectedUser.userID,
       });
-      props.setMessages((messages) => [
-        ...messages,
-        { toUser: props.selectedUser.username, content, time: moment().format("h:mm a"), fromSelf: true },
-      ]);
+      // 訊息加進自己的聊天紀錄
     }
-    console.log("Message object", props.messages);
+    props.setMessages((messages) => [
+        ...messages,
+        {
+          toUser: props.selectedUser.username,
+          content,
+          time: moment().format("h:mm a"),
+          fromSelf: true,
+        },
+      ]);
   };
 
   return (
