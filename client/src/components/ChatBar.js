@@ -6,6 +6,7 @@ const ChatBar = (props) => {
 
   const userName_from_click = (e) => {
     selectedUser = e.target.innerText;
+    console.log(selectedUser);
     // 取得被選取使用者詳細訊息
     let selectedUserDetails = userList.find(
       (user) => user.username === selectedUser
@@ -24,8 +25,12 @@ const ChatBar = (props) => {
             className="chat__users"
             onClick={(e) => userName_from_click(e)}
           >
-            {user.username}
+            {user.username}<p></p>
+            
           </div>
+          <div>{user.connected? "online" : "offline"}</div>
+          {user.hasNewMessages ? "!":""}
+          
         </>
       );
     }

@@ -10,8 +10,9 @@ const ChatPage = (props) => {
   const lastMessageRef = useRef(null);
 
   const getSelectedUser = (user) => {
+    user.hasNewMessages = false;
     setSelectedUser(user);
-    // 有人被選取才會有聊天室跑出來
+    // 有人被選取才會有聊天室跑出來 -> ChatBody
     setUserSelected(true);
   };
 
@@ -26,9 +27,10 @@ const ChatPage = (props) => {
         connectedUsers={props.connectedUsers}
         selectUser={getSelectedUser}
       />
-      {userSelected ? (
+      
         <div className="chat__main">
         <ChatBody 
+          userSelected={userSelected}
           selectedUser={selectedUser}
           connectedUsers={props.connectedUsers}
           messages = {messages}
@@ -42,9 +44,7 @@ const ChatPage = (props) => {
           setMessages = {setMessages}
         />
       </div>
-      ) : (
-        <div className="chat__main">Click user to start messaging</div>
-      )}
+      
     </div>
   );
 };

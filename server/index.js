@@ -13,9 +13,10 @@ const io = require("socket.io")(http, {
 // database connection
 const con = mysql.createConnection({
   host: "localhost",
+  port: 33306,
   user: "root",
   password: "",
-  database: "chat_back",
+  database: "database",
 });
 
 con.connect(function (err) {
@@ -44,6 +45,7 @@ io.on("connection", (socket) => {
       userID: id,
       username: socket.username,
       key: id,
+      connected: true,
     });
   }
 
@@ -53,7 +55,7 @@ io.on("connection", (socket) => {
     username: socket.username,
     key: socket.id,
     self: false,
-    // connected: false,
+    connected: true,
   });
 
   socket.emit("users", users);
@@ -77,6 +79,13 @@ io.on("connection", (socket) => {
         console.log("Message send to db");
       }
     );
+  });
+
+  socket.on("disconnect", () => {
+    socket.broadcast.emit("user disconnected", {
+      userID: socket.id,
+      username: socket.username,
+    });
   });
 });
 

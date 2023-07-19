@@ -15,7 +15,6 @@ const ChatFooter = (props) => {
     e.preventDefault();
     ref.target.value = "";
     if (props.selectedUser) {
-      // 訊息透過 Server 傳給對象
       socket.emit("private message", {
         content,
         to: props.selectedUser.userID,
@@ -23,14 +22,14 @@ const ChatFooter = (props) => {
       // 訊息加進自己的聊天紀錄
     }
     props.setMessages((messages) => [
-        ...messages,
-        {
-          toUser: props.selectedUser.username,
-          content,
-          time: moment().format("h:mm a"),
-          fromSelf: true,
-        },
-      ]);
+      ...messages,
+      {
+        toUser: props.selectedUser.username,
+        content,
+        time: moment().format("h:mm a"),
+        fromSelf: true,
+      },
+    ]);
   };
 
   return (

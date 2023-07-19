@@ -15,7 +15,13 @@ function App() {
     socket.connect(); // 丟回 server line 30
   };
 
+  const initReactiveProperties = (user) => {
+    user.connected = true;
+    user.hasNewMessages = false;
+  };
+
   socket.on("other user connect", (user) => {
+    initReactiveProperties(user);
     addUsers([...usersList, user]);
   });
 
@@ -24,9 +30,20 @@ function App() {
     users.forEach((user) => {
       // 透過該網頁的 socket.id 與 userID 判斷是否為本人
       user.self = user.userID === socket.id;
+      initReactiveProperties(user);
     });
-
     addUsers(users);
+  });
+
+  socket.on("user disconnected", (user) => {
+    for (let i = 0; i < usersList.length; i++) {
+      const userInList = usersList[i];
+      if (userInList.username === user.username) {
+        usersList[i].connected = false;
+        break;
+      }
+      console.log(usersList);
+    }
   });
 
   return (
